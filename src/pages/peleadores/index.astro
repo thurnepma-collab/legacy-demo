@@ -1,7 +1,7 @@
 ---
 import { u } from "../../lib/url";
 import Base from '../../layouts/Base.astro';
-import Silhouette from '../../components/Silhouette.astro';
+import FighterPhoto from '../../components/FighterPhoto.astro';
 import { fighters, recordStr } from '../../data/fighters';
 ---
 <Base title="Peleadores" description="Roster de Legacy Fight League: récord, división y trayectoria de cada peleador.">
@@ -10,7 +10,7 @@ import { fighters, recordStr } from '../../data/fighters';
   <div class="grid grid-3" style="margin-top:24px">
     {fighters.map((f) => (
       <a class="card f" href={u(`/peleadores/${f.slug}`)}>
-        <Silhouette seed={f.slug} />
+        <FighterPhoto f={f} />
         <div class="f-body">
           {f.champion && <span class="tag tag-gold">Campeón</span>}
           <h3>{f.name}</h3>

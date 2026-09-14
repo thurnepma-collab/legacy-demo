@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 import { fighters, recordStr } from '../../../data/fighters';
-import { renderPng, frame, h, silhouette, BRAND } from '../../../lib/og';
+import { renderPng, frame, h, silhouette, photoNode, BRAND } from '../../../lib/og';
 
 export function getStaticPaths() {
   return fighters.map((f) => ({ params: { slug: f.slug }, props: { f } }));
@@ -21,7 +21,7 @@ export const GET: APIRoute = async ({ props }) => {
       ]),
       f.gym ? h('div', { fontSize: 24, color: BRAND.muted, marginTop: 10 }, `${f.gym}${f.fightingOutOf ? ' · ' + f.fightingOutOf : ''}`) : null,
     ].filter(Boolean)),
-    h('div', { display: 'flex', alignItems: 'flex-end', width: 380, height: 494, overflow: 'hidden', marginTop: -20 }, [silhouette(380)]),
+    h('div', { display: 'flex', flexShrink: 0, alignItems: 'flex-end', width: 380, height: 494, overflow: 'hidden', marginTop: -20 }, [(await photoNode(f.photo, 380, 494)) ?? silhouette(380)]),
   ]);
   return renderPng(tree);
 };

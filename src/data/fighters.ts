@@ -31,11 +31,13 @@ export type Fighter = {
   bio?: string;
   bouts?: Bout[];
   featured?: boolean;
+  photo?: string;          // ruta en /public/fotos (demo: Tapology)
 };
 
 export const fighters: Fighter[] = [
   {
     slug: 'roberto-zambrano',
+    photo: '/fotos/roberto-zambrano.jpg',
     name: 'Roberto Zambrano',
     givenName: 'Matías Roberto Zambrano Maldonado',
     nickname: 'El Vago de Oro',
@@ -74,11 +76,11 @@ export const fighters: Fighter[] = [
       { date: '2022-10-21', result: 'W', opponent: 'Miguel Erazo', method: 'DEC', detail: 'Decisión unánime', event: 'Naciones MMA 10' },
     ],
   },
-  { slug: 'luis-solorzano', name: 'Luis Solórzano', record: { w: 11, l: 9, d: 0 }, weightClass: 'Mosca', weightLbs: 125, tapology: 'https://www.tapology.com/fightcenter/fighters/' },
-  { slug: 'raul-zaragoza', name: 'Raúl Zaragoza', record: { w: 7, l: 1, d: 0 }, weightClass: 'Wélter', weightLbs: 170, tapology: 'https://www.tapology.com/fightcenter/fighters/324872-raul-zaragoza' },
-  { slug: 'antonio-rodriguez', name: 'Antonio Rodríguez', record: { w: 12, l: 6, d: 0 }, weightClass: 'Gallo', weightLbs: 135, tapology: 'https://www.tapology.com/fightcenter/fighters/86503-too-rodriguez' },
-  { slug: 'fabian-albuerne', name: 'Fabián Albuerne', record: { w: 6, l: 3, d: 0 }, weightClass: 'Ligero', weightLbs: 155, tapology: 'https://www.tapology.com/fightcenter/fighters/318585-fabian-albuerne' },
-  { slug: 'daniel-reyes', name: 'Daniel Reyes', record: { w: 6, l: 0, d: 0 }, weightClass: 'Ligero', weightLbs: 155, tapology: 'https://www.tapology.com/fightcenter/fighters/398366-daniel-reyes' },
+  { slug: 'luis-solorzano', name: 'Luis Solórzano', nickname: 'Power', photo: '/fotos/luis-solorzano.jpg', record: { w: 11, l: 9, d: 0 }, weightClass: 'Mosca', weightLbs: 125, tapology: 'https://www.tapology.com/fightcenter/fighters/' },
+  { slug: 'raul-zaragoza', name: 'Raúl Zaragoza', nickname: 'El Matador', photo: '/fotos/raul-zaragoza.jpg', record: { w: 7, l: 1, d: 0 }, weightClass: 'Wélter', weightLbs: 170, tapology: 'https://www.tapology.com/fightcenter/fighters/324872-raul-zaragoza' },
+  { slug: 'antonio-rodriguez', name: 'Antonio Rodríguez', nickname: 'El Malilla', photo: '/fotos/antonio-rodriguez.png', record: { w: 12, l: 6, d: 0 }, weightClass: 'Gallo', weightLbs: 135, tapology: 'https://www.tapology.com/fightcenter/fighters/86503-too-rodriguez' },
+  { slug: 'fabian-albuerne', name: 'Fabián Albuerne', photo: '/fotos/fabian-albuerne.jpg', record: { w: 6, l: 3, d: 0 }, weightClass: 'Ligero', weightLbs: 155, tapology: 'https://www.tapology.com/fightcenter/fighters/318585-fabian-albuerne' },
+  { slug: 'daniel-reyes', name: 'Daniel Reyes', photo: '/fotos/daniel-reyes.jpg', record: { w: 6, l: 0, d: 0 }, weightClass: 'Ligero', weightLbs: 155, tapology: 'https://www.tapology.com/fightcenter/fighters/398366-daniel-reyes' },
   { slug: 'emanuel-castaneda', name: 'Emanuel Castañeda', record: { w: 1, l: 1, d: 1 }, weightClass: 'Gallo', weightLbs: 135 },
 ];
 

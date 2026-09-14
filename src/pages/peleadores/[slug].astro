@@ -1,7 +1,7 @@
 ---
 import { u } from "../../lib/url";
 import Base from '../../layouts/Base.astro';
-import Silhouette from '../../components/Silhouette.astro';
+import FighterPhoto from '../../components/FighterPhoto.astro';
 import { fighters, recordStr, type Fighter } from '../../data/fighters';
 import { fmtDate } from '../../data/events';
 
@@ -19,7 +19,7 @@ const finishRows: [string, number][] = f.finishes
 ---
 <Base title={title} description={desc} ogImage={`/og/peleadores/${f.slug}.png`} ogType="profile">
   <div class="profile">
-    <div class="photo card"><Silhouette seed={f.slug} /></div>
+    <div class="photo card"><FighterPhoto f={f} /></div>
     <div class="info">
       {f.champion && <span class="tag tag-gold">{f.champion}</span>}
       {f.nickname && <div class="eyebrow" style="margin-top:10px">"{f.nickname}"</div>}

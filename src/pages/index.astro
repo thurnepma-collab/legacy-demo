@@ -1,7 +1,7 @@
 ---
 import { u } from "../lib/url";
 import Base from '../layouts/Base.astro';
-import Silhouette from '../components/Silhouette.astro';
+import FighterPhoto from '../components/FighterPhoto.astro';
 import { upcoming, completed, fmtDate } from '../data/events';
 import { fighters, recordStr } from '../data/fighters';
 const next = upcoming()[0];
@@ -25,7 +25,7 @@ const featured = fighters.find((f) => f.featured)!;
   <section class="section">
     <div class="section-head"><h2>Campeón destacado</h2><a href={u('/peleadores')}>Todos los peleadores →</a></div>
     <a class="card feat" href={u(`/peleadores/${featured.slug}`)}>
-      <Silhouette seed={featured.slug} class="feat-img" />
+      <FighterPhoto f={featured} class="feat-img" />
       <div class="feat-body">
         <span class="tag tag-gold">{featured.champion}</span>
         <h2>{featured.name}</h2>

@@ -1,0 +1,17 @@
+---
+import Silhouette from './Silhouette.astro';
+import { u } from '../lib/url';
+import type { Fighter } from '../data/fighters';
+interface Props { f: Fighter; class?: string; }
+const { f, class: cls = '' } = Astro.props;
+---
+{f.photo ? (
+  <div class={`fphoto ${cls}`}><img src={u(f.photo)} alt={f.name} loading="lazy" /></div>
+) : (
+  <Silhouette seed={f.slug} class={cls} />
+)}
+<style>
+  .fphoto { aspect-ratio: 400 / 520; width: 100%; overflow: hidden; background: #141418; position: relative; }
+  .fphoto img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
+  .fphoto::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(11,11,13,.55), transparent 45%); }
+</style>

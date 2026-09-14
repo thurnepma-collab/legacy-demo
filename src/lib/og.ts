@@ -2,6 +2,7 @@ import satori from 'satori';
 import { Resvg } from '@resvg/resvg-js';
 import { readFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
+import { join } from 'node:path';
 
 const require = createRequire(import.meta.url);
 const fontFile = (pkg: string, file: string) => require.resolve(`${pkg}/files/${file}`);
@@ -61,4 +62,16 @@ export function silhouette(size = 420) {
     h('path', {}, undefined, { d: 'M122 300 Q70 330 60 420 L95 440 Q110 380 130 340 Z', fill: '#26262e' }),
     h('path', {}, undefined, { d: 'M278 300 Q330 330 340 420 L305 440 Q290 380 270 340 Z', fill: '#26262e' }),
   ], { viewBox: '0 0 400 520', xmlns: 'http://www.w3.org/2000/svg' });
+}
+
+// Foto del peleador (de /public/fotos) como data URI para satori; null si no hay foto.
+export async function photoNode(photo: string | undefined, w = 380, ht = 494) {
+  if (!photo) return null;
+  const file = join(process.cwd(), 'public', photo);
+  let data: Buffer;
+  try { data = await readFile(file); } catch { return null; }
+  const mime = photo.endsWith('.png') ? 'image/png' : 'image/jpeg';
+  return h('div', { display: 'flex', flexShrink: 0, width: w, height: ht, borderRadius: 14, overflow: 'hidden', border: `3px solid ${BRAND.red}` }, [
+    h('img', { objectFit: 'cover', objectPosition: 'center top' }, undefined, { width: w, height: ht, src: `data:${mime};base64,${data.toString('base64')}` }),
+  ]);
 }
