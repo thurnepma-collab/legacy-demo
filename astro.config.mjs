@@ -9,5 +9,5 @@ export default defineConfig({
   site,
   base,
   output: 'static',
-  trailingSlash: 'never',
+  trailingSlash: 'always',
 });
