@@ -1,0 +1,28 @@
+---
+import { u } from "../../lib/url";
+import Base from '../../layouts/Base.astro';
+import Silhouette from '../../components/Silhouette.astro';
+import { fighters, recordStr } from '../../data/fighters';
+---
+<Base title="Peleadores" description="Roster de Legacy Fight League: récord, división y trayectoria de cada peleador.">
+  <div class="eyebrow">Roster</div>
+  <h1>Peleadores</h1>
+  <div class="grid grid-3" style="margin-top:24px">
+    {fighters.map((f) => (
+      <a class="card f" href={u(`/peleadores/${f.slug}`)}>
+        <Silhouette seed={f.slug} />
+        <div class="f-body">
+          {f.champion && <span class="tag tag-gold">Campeón</span>}
+          <h3>{f.name}</h3>
+          <div class="muted small">{f.nickname ? `"${f.nickname}" · ` : ''}{f.weightClass} · {f.weightLbs} lbs</div>
+          <div class="display rec">{recordStr(f)}</div>
+        </div>
+      </a>
+    ))}
+  </div>
+</Base>
+<style>
+  .f { overflow: hidden; } .f:hover { border-color: var(--red); }
+  .f-body { padding: 16px; display: flex; flex-direction: column; gap: 6px; }
+  .rec { font-size: 28px; color: var(--red-2); } .small { font-size: 13px; }
+</style>

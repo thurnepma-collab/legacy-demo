@@ -1,0 +1,86 @@
+---
+import { u } from "../../lib/url";
+import Base from '../../layouts/Base.astro';
+import { events, fmtDate, type Event, type BoutCard } from '../../data/events';
+
+export function getStaticPaths() {
+  return events.map((e) => ({ params: { slug: e.slug }, props: { e } }));
+}
+const { e } = Astro.props as { e: Event };
+const isUp = e.status === 'upcoming';
+const desc = isUp
+  ? `${fmtDate(e.date, { weekday: 'long', day: 'numeric', month: 'long' })} · ${e.venue}, ${e.city} · Estelar: ${e.mainEvent}`
+  : `Resultados · ${fmtDate(e.date)} · ${e.venue} · ${e.mainEvent}`;
+const sections = ['Estelar', 'Coestelar', 'Cartelera principal', 'Preliminares'] as const;
+const winnerName = (b: BoutCard) => (b.winner ? b[b.winner].name : '');
+const grouped = sections
+  .map((s) => ({ s, bouts: (e.card ?? []).filter((b) => b.section === s).sort((a, b) => b.order - a.order) }))
+  .filter((g) => g.bouts.length);
+---
+<Base title={isUp ? e.name : `${e.name} · Resultados`} description={desc} ogImage={`/og/eventos/${e.slug}.png`} ogType="article">
+  <div class="head card">
+    <div>
+      <div class="eyebrow">{isUp ? 'Próximo evento' : 'Resultados oficiales'}</div>
+      <h1>{e.name}</h1>
+      <div class="muted meta">{fmtDate(e.date, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}{e.time ? ` · ${e.time} hrs` : ''} · {e.venue}, {e.city}{e.stream ? ` · ${e.stream}` : ''}</div>
+      {e.summary && <p class="sum">{e.summary}</p>}
+      {isUp && e.tickets && <a class="btn" href={e.tickets} target="_blank" rel="noopener">Comprar boletos</a>}
+    </div>
+    <div class="display bignum">{e.number}</div>
+  </div>
+
+  {e.card ? (
+    <section class="section">
+      <div class="section-head"><h2>{isUp ? 'Cartelera' : 'Resultados'}</h2><span class="muted" style="font-size:12px">{e.card.length} combates</span></div>
+      {grouped.map(({ s, bouts }) => (
+        <div class="block">
+          <div class="eyebrow blk">{s}</div>
+          {bouts.map((b) => (
+            <div class="card bout">
+              <div class:list={['side', 'a', { won: b.winner === 'a', lost: b.winner === 'b' }]}>
+                {b.a.slug ? <a href={u(`/peleadores/${b.a.slug}`)}>{b.a.name}</a> : <span>{b.a.name}</span>}
+                {b.a.record && <div class="muted small">{b.a.record}</div>}
+              </div>
+              <div class="mid">
+                <div class="tag">{b.weightLbs ? `${b.weightLbs} lbs` : b.type} · {b.level}</div>
+                {b.title && <div class="tag tag-gold">{b.title}</div>}
+                {b.winner ? (
+                  <div class="verdict"><strong>{winnerName(b)}</strong><div class="muted small">{b.method} · {b.time}</div></div>
+                ) : (
+                  <div class="vs display">VS</div>
+                )}
+              </div>
+              <div class:list={['side', 'b', { won: b.winner === 'b', lost: b.winner === 'a' }]}>
+                {b.b.slug ? <a href={u(`/peleadores/${b.b.slug}`)}>{b.b.name}</a> : <span>{b.b.name}</span>}
+                {b.b.record && <div class="muted small">{b.b.record}</div>}
+              </div>
+            </div>
+          ))}
+        </div>
+      ))}
+    </section>
+  ) : (
+    <section class="section"><p class="muted">Cartelera completa en <a href="https://www.tapology.com/fightcenter/promotions/5120-riot-fight-league-rfl" target="_blank" rel="noopener" style="text-decoration:underline">Tapology</a>. En el sitio final, cada evento tendrá su cartelera y resultados cargados por la liga desde el CMS.</p></section>
+  )}
+</Base>
+
+<style>
+  .head { display: flex; justify-content: space-between; align-items: center; gap: 24px; padding: 40px; position: relative; overflow: hidden; background: linear-gradient(135deg, #1a0b0d 0%, var(--bg-2) 55%); }
+  .head h1 { margin: 6px 0 10px; }
+  .meta { font-size: 15px; }
+  .sum { max-width: 640px; color: #d5d5dc; }
+  .bignum { font-size: 220px; color: rgba(227,32,43,.18); line-height: .8; position: absolute; right: 24px; top: 50%; transform: translateY(-50%); }
+  .block { margin-bottom: 26px; }
+  .blk { margin-bottom: 10px; }
+  .bout { display: grid; grid-template-columns: 1fr 200px 1fr; align-items: center; gap: 12px; padding: 16px 20px; margin-bottom: 10px; }
+  .side { font-family: var(--display); font-size: 28px; line-height: 1; }
+  .side.a { text-align: right; } .side.b { text-align: left; }
+  .side.won { color: var(--text); } .side.won::before { content: 'W '; color: var(--win); font-size: 16px; }
+  .side.lost { color: var(--muted); }
+  .side a:hover { color: var(--red-2); }
+  .mid { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
+  .vs { font-size: 26px; color: var(--red-2); }
+  .verdict { font-size: 13px; }
+  .small { font-size: 12px; font-family: var(--body); }
+  @media (max-width: 720px) { .bout { grid-template-columns: 1fr; } .side.a, .side.b { text-align: center; } .bignum { display: none; } }
+</style>

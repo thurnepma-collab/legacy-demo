@@ -1,0 +1,58 @@
+---
+import { u } from "../lib/url";
+import Base from '../layouts/Base.astro';
+// Página para la reunión: qué ve WhatsApp hoy vs. con el sitio nuevo.
+const site = Astro.site?.toString().replace(/\/$/, '');
+---
+<Base title="Antes y después" description="Qué ve WhatsApp, Instagram y Google cuando alguien comparte un link de la liga.">
+  <div class="eyebrow">Demo para la reunión</div>
+  <h1>Antes y después</h1>
+  <p class="muted" style="max-width:720px">Cuando un peleador comparte un link de la liga en WhatsApp o Instagram, la app pide al servidor una vista previa. Hoy el servidor responde con una página vacía: no hay nombre, no hay foto. Con el sitio nuevo cada peleador y cada evento tienen su propia tarjeta.</p>
+
+  <div class="grid grid-2" style="margin-top:28px">
+    <div>
+      <div class="eyebrow" style="color:var(--muted)">Hoy · riotfl.mx</div>
+      <div class="wa">
+        <div class="bubble">
+          <div class="prev empty"><div class="ph"></div><div><div class="t">riotfl.mx</div><div class="d">Legacy Fight League</div></div></div>
+          <div class="link">https://www.riotfl.mx/</div>
+        </div>
+      </div>
+      <ul class="muted pts">
+        <li>Sin foto, sin nombre del peleador, sin fecha del evento.</li>
+        <li>Google no indexa peleadores ni resultados: la página llega vacía.</li>
+        <li>Misma vista previa para todos los links del sitio.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="eyebrow">Con el sitio nuevo</div>
+      <div class="wa">
+        <div class="bubble">
+          <div class="prev"><img src={u('/og/peleadores/roberto-zambrano.png')} alt="Vista previa de Roberto Zambrano" /><div class="t">Roberto Zambrano "El Vago de Oro" | Legacy Fight League</div><div class="d">9-2-0 · Mosca · Campeón Mosca Legacy Fight League · Bonebreakers MMA</div></div>
+          <div class="link">{site}/peleadores/roberto-zambrano</div>
+        </div>
+        <div class="bubble">
+          <div class="prev"><img src={u('/og/eventos/legacy-19.png')} alt="Vista previa de Legacy 19" /><div class="t">Legacy 19 | Legacy Fight League</div><div class="d">sábado, 3 de octubre · Universidad 2014, CDMX · Estelar: Zambrano vs. Por confirmar</div></div>
+          <div class="link">{site}/eventos/legacy-19</div>
+        </div>
+      </div>
+      <ul class="muted pts">
+        <li>Cada peleador comparte su propia tarjeta con foto, récord y cinturón.</li>
+        <li>Cada evento comparte fecha, venue y estelar, y cambia a resultados esa noche.</li>
+        <li>Google indexa cada página: "Roberto Zambrano MMA" encuentra la liga.</li>
+      </ul>
+    </div>
+  </div>
+</Base>
+<style>
+  .wa { background: #0e1a14; border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 10px; min-height: 220px; }
+  .bubble { background: #1f2c24; border-radius: 10px; padding: 8px; max-width: 360px; }
+  .prev { background: #17221c; border-radius: 8px; overflow: hidden; }
+  .prev img { width: 100%; display: block; }
+  .prev .t { font-size: 13px; font-weight: 700; padding: 8px 10px 2px; }
+  .prev .d { font-size: 12px; color: var(--muted); padding: 0 10px 8px; }
+  .prev.empty { display: flex; align-items: center; gap: 10px; padding: 10px; }
+  .ph { width: 56px; height: 56px; background: #2a3a30; border-radius: 6px; flex-shrink: 0; }
+  .link { font-size: 12px; color: #7cc4a0; padding: 8px 6px 2px; word-break: break-all; }
+  .pts { font-size: 14px; padding-left: 18px; display: grid; gap: 6px; margin-top: 14px; }
+</style>

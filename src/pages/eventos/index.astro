@@ -1,0 +1,36 @@
+---
+import { u } from "../../lib/url";
+import Base from '../../layouts/Base.astro';
+import { upcoming, completed, fmtDate } from '../../data/events';
+---
+<Base title="Eventos" description="Calendario y resultados de todos los eventos de Legacy Fight League en la Ciudad de México.">
+  <div class="eyebrow">Calendario</div>
+  <h1>Eventos</h1>
+  <section class="section">
+    <div class="section-head"><h2>Próximos</h2></div>
+    {upcoming().map((e) => (
+      <a class="card row" href={u(`/eventos/${e.slug}`)}>
+        <div class="display num">{e.number}</div>
+        <div class="grow"><h3>{e.name}</h3><div class="muted">{fmtDate(e.date, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })} · {e.venue}, {e.city}</div><div class="main">Estelar: {e.mainEvent}</div></div>
+        <span class="btn btn-sm">Cartelera</span>
+      </a>
+    ))}
+  </section>
+  <section class="section">
+    <div class="section-head"><h2>Resultados</h2></div>
+    {completed().map((e) => (
+      <a class="card row" href={u(`/eventos/${e.slug}`)}>
+        <div class="display num muted">{e.number}</div>
+        <div class="grow"><h3>{e.name}</h3><div class="muted">{fmtDate(e.date)} · {e.venue}, {e.city}</div><div class="main">{e.mainEvent}</div></div>
+        <span class="tag">{e.card ? 'Resultados' : 'Resumen'}</span>
+      </a>
+    ))}
+  </section>
+</Base>
+<style>
+  .row { display: flex; align-items: center; gap: 22px; padding: 18px 22px; margin-bottom: 12px; }
+  .row:hover { border-color: var(--red); }
+  .num { font-size: 52px; color: var(--red-2); width: 64px; text-align: center; }
+  .grow { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+  .main { font-weight: 700; font-size: 14px; }
+</style>

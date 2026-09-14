@@ -1,0 +1,31 @@
+---
+import { u } from "../lib/url";
+import Base from '../layouts/Base.astro';
+const divisions = [
+  { name: 'Mosca · 125 lbs', champ: { name: 'Roberto Zambrano', slug: 'roberto-zambrano', record: '9-2' }, top: [['Luis Solórzano', '11-9', 'luis-solorzano'], ['Daniel Núñez', '5-5'], ['Por definir', '']] },
+  { name: 'Gallo · 135 lbs', champ: null, top: [['Antonio Rodríguez', '12-6', 'antonio-rodriguez'], ['Emanuel Castañeda', '1-1-1', 'emanuel-castaneda'], ['Por definir', '']] },
+  { name: 'Ligero · 155 lbs', champ: null, top: [['Daniel Reyes', '6-0', 'daniel-reyes'], ['Fabián Albuerne', '6-3', 'fabian-albuerne'], ['Por definir', '']] },
+  { name: 'Wélter · 170 lbs', champ: null, top: [['Raúl Zaragoza', '7-1', 'raul-zaragoza'], ['Por definir', ''], ['Por definir', '']] },
+];
+---
+<Base title="Rankings" description="Rankings oficiales por división de Legacy Fight League, actualizados después de cada evento.">
+  <div class="eyebrow">Actualizado después de cada evento</div>
+  <h1>Rankings</h1>
+  <p class="muted">Editables por la liga desde el CMS, sin desarrollador. Posiciones ilustrativas en esta demo.</p>
+  <div class="grid grid-2" style="margin-top:20px">
+    {divisions.map((d) => (
+      <div class="card div">
+        <h3>{d.name}</h3>
+        <div class="champ">{d.champ ? <><span class="tag tag-gold">Campeón</span> <a href={u(`/peleadores/${d.champ.slug}`)} class="cname">{d.champ.name}</a> <span class="muted">{d.champ.record}</span></> : <span class="muted">Título vacante</span>}</div>
+        <ol>{d.top.map(([n, r, s]) => <li>{s ? <a href={u(`/peleadores/${s}`)}>{n}</a> : <span class:list={{ muted: !r }}>{n}</span>} <span class="muted">{r}</span></li>)}</ol>
+      </div>
+    ))}
+  </div>
+</Base>
+<style>
+  .div { padding: 22px; }
+  .champ { margin: 12px 0 14px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .cname { font-weight: 700; }
+  ol { margin: 0; padding-left: 22px; display: grid; gap: 8px; }
+  li a:hover { color: var(--red-2); }
+</style>

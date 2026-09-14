@@ -1,0 +1,121 @@
+---
+import { u } from "../../lib/url";
+import Base from '../../layouts/Base.astro';
+import Silhouette from '../../components/Silhouette.astro';
+import { fighters, recordStr, type Fighter } from '../../data/fighters';
+import { fmtDate } from '../../data/events';
+
+export function getStaticPaths() {
+  return fighters.map((f) => ({ params: { slug: f.slug }, props: { f } }));
+}
+const { f } = Astro.props as { f: Fighter };
+const title = f.nickname ? `${f.name} "${f.nickname}"` : f.name;
+const desc = `${recordStr(f)} · ${f.weightClass}${f.champion ? ' · ' + f.champion : ''}${f.gym ? ' · ' + f.gym : ''}`;
+const total = f.finishes ? f.finishes.ko + f.finishes.sub + f.finishes.dec : 0;
+const pct = (n: number) => (total ? Math.round((n / total) * 100) : 0);
+const finishRows: [string, number][] = f.finishes
+  ? [['KO / TKO', f.finishes.ko], ['Sumisión', f.finishes.sub], ['Decisión', f.finishes.dec]]
+  : [];
+---
+<Base title={title} description={desc} ogImage={`/og/peleadores/${f.slug}.png`} ogType="profile">
+  <div class="profile">
+    <div class="photo card"><Silhouette seed={f.slug} /></div>
+    <div class="info">
+      {f.champion && <span class="tag tag-gold">{f.champion}</span>}
+      {f.nickname && <div class="eyebrow" style="margin-top:10px">"{f.nickname}"</div>}
+      <h1>{f.name}</h1>
+      <div class="display rec">{recordStr(f)} <span class="muted small-display">Pro MMA</span></div>
+      <dl class="facts">
+        <div><dt>División</dt><dd>{f.weightClass} · {f.weightLbs} lbs</dd></div>
+        {f.gym && <div><dt>Equipo</dt><dd>{f.gym}</dd></div>}
+        {f.age && <div><dt>Edad</dt><dd>{f.age} años</dd></div>}
+        {f.heightCm && <div><dt>Estatura</dt><dd>{f.heightCm} cm</dd></div>}
+        {f.fightingOutOf && <div><dt>Pelea desde</dt><dd>{f.fightingOutOf}</dd></div>}
+        {f.streak && <div><dt>Racha</dt><dd>{f.streak}</dd></div>}
+      </dl>
+      <div class="links">
+        {f.instagram && <a class="btn btn-sm" href={`https://instagram.com/${f.instagram}`} target="_blank" rel="noopener">@{f.instagram}</a>}
+        {f.tapology && <a class="btn btn-sm btn-ghost" href={f.tapology} target="_blank" rel="noopener">Tapology</a>}
+        {f.sherdog && <a class="btn btn-sm btn-ghost" href={f.sherdog} target="_blank" rel="noopener">Sherdog</a>}
+      </div>
+    </div>
+  </div>
+
+  {f.bio && <p class="bio">{f.bio}</p>}
+
+  {f.finishes && (
+    <section class="section">
+      <div class="section-head"><h2>Cómo gana</h2></div>
+      <div class="grid grid-3">
+        {finishRows.map(([label, n]) => (
+          <div class="card stat">
+            <div class="display big">{pct(n)}%</div>
+            <div class="muted">{label} · {n} {n === 1 ? 'victoria' : 'victorias'}</div>
+            <div class="bar"><span style={`width:${pct(n)}%`}></span></div>
+          </div>
+        ))}
+      </div>
+    </section>
+  )}
+
+  {f.rankings && (
+    <section class="section">
+      <div class="section-head"><h2>Rankings regionales</h2><span class="muted" style="font-size:12px">Fuente: Tapology</span></div>
+      <div class="grid grid-3">
+        {f.rankings.map((r) => (
+          <div class="card stat"><div class="display big">#{r.rank}</div><div class="muted">{r.label} · de {r.of.toLocaleString('es-MX')}</div></div>
+        ))}
+      </div>
+    </section>
+  )}
+
+  {f.bouts && (
+    <section class="section">
+      <div class="section-head"><h2>Trayectoria profesional</h2></div>
+      <div class="table-wrap card">
+        <table>
+          <thead><tr><th></th><th>Rival</th><th>Método</th><th>Evento</th><th>Fecha</th></tr></thead>
+          <tbody>
+            {f.bouts.map((b) => (
+              <tr>
+                <td><span class:list={['res', b.result]}>{b.result}</span></td>
+                <td class="strong">{b.opponent}</td>
+                <td><strong>{b.method}</strong><div class="muted small">{b.detail}</div></td>
+                <td>{b.eventSlug ? <a class="evlink" href={u(`/eventos/${b.eventSlug}`)}>{b.event}</a> : b.event}</td>
+                <td class="muted small">{fmtDate(b.date, { day: '2-digit', month: 'short', year: 'numeric' })}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  )}
+</Base>
+
+<style>
+  .profile { display: grid; grid-template-columns: 320px 1fr; gap: 32px; align-items: start; }
+  .photo { overflow: hidden; }
+  .info h1 { margin: 6px 0 8px; }
+  .rec { font-size: 56px; color: var(--red-2); }
+  .small-display { font-size: 22px; }
+  .facts { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; margin: 22px 0; }
+  .facts div { border-left: 2px solid var(--line); padding-left: 10px; }
+  dt { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+  dd { margin: 2px 0 0; font-weight: 700; }
+  .links { display: flex; gap: 10px; flex-wrap: wrap; }
+  .bio { margin-top: 28px; font-size: 17px; max-width: 760px; color: #d5d5dc; }
+  .stat { padding: 20px; }
+  .big { font-size: 44px; }
+  .bar { height: 4px; background: var(--bg-3); border-radius: 2px; margin-top: 12px; overflow: hidden; }
+  .bar span { display: block; height: 100%; background: var(--red); }
+  th { text-align: left; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); padding: 12px 14px; border-bottom: 1px solid var(--line); }
+  td { padding: 12px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr:last-child td { border-bottom: 0; }
+  .strong { font-weight: 700; }
+  .small { font-size: 12px; }
+  .res { display: inline-block; width: 28px; height: 28px; line-height: 28px; text-align: center; border-radius: 4px; font-weight: 700; font-size: 13px; }
+  .res.W { background: rgba(47,191,113,.18); color: var(--win); }
+  .res.L { background: rgba(227,32,43,.18); color: var(--loss); }
+  .evlink { text-decoration: underline; text-decoration-color: var(--line); }
+  @media (max-width: 720px) { .profile { grid-template-columns: 1fr; } .photo { max-width: 320px; } }
+</style>

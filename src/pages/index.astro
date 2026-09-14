@@ -1,0 +1,69 @@
+---
+import { u } from "../lib/url";
+import Base from '../layouts/Base.astro';
+import Silhouette from '../components/Silhouette.astro';
+import { upcoming, completed, fmtDate } from '../data/events';
+import { fighters, recordStr } from '../data/fighters';
+const next = upcoming()[0];
+const last = completed().slice(0, 3);
+const featured = fighters.find((f) => f.featured)!;
+---
+<Base title="Legacy Fight League" description="Liga de artes marciales mixtas en la Ciudad de México. Eventos, peleadores, resultados y rankings.">
+  <section class="hero card">
+    <div class="hero-text">
+      <div class="eyebrow">Próximo evento · {fmtDate(next.date, { weekday: 'long', day: 'numeric', month: 'long' })}</div>
+      <h1>{next.name}</h1>
+      <p class="muted">{next.venue}, {next.city} · {next.time} hrs · Estelar: {next.mainEvent}</p>
+      <div class="cta">
+        <a class="btn" href={next.tickets} target="_blank" rel="noopener">Comprar boletos</a>
+        <a class="btn btn-ghost" href={u(`/eventos/${next.slug}`)}>Ver cartelera</a>
+      </div>
+    </div>
+    <div class="hero-num display">{next.number}</div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><h2>Campeón destacado</h2><a href={u('/peleadores')}>Todos los peleadores →</a></div>
+    <a class="card feat" href={u(`/peleadores/${featured.slug}`)}>
+      <Silhouette seed={featured.slug} class="feat-img" />
+      <div class="feat-body">
+        <span class="tag tag-gold">{featured.champion}</span>
+        <h2>{featured.name}</h2>
+        <div class="muted">"{featured.nickname}" · {featured.weightClass} · {featured.gym}</div>
+        <div class="display rec">{recordStr(featured)}</div>
+        <p class="muted">{featured.bio}</p>
+      </div>
+    </a>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><h2>Resultados</h2><a href={u('/eventos')}>Todos los eventos →</a></div>
+    <div class="grid grid-3">
+      {last.map((e) => (
+        <a class="card ev" href={u(`/eventos/${e.slug}`)}>
+          <div class="tag">Resultado</div>
+          <h3>{e.name}</h3>
+          <div class="muted small">{fmtDate(e.date)} · {e.venue}</div>
+          <div class="main">{e.mainEvent}</div>
+        </a>
+      ))}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero { display: flex; justify-content: space-between; align-items: center; gap: 24px; padding: 48px 40px; background: linear-gradient(135deg, #1a0b0d 0%, var(--bg-2) 55%); overflow: hidden; position: relative; }
+  .hero-text { max-width: 620px; }
+  .hero h1 { margin: 8px 0 12px; }
+  .cta { display: flex; gap: 12px; margin-top: 22px; flex-wrap: wrap; }
+  .hero-num { font-size: 260px; color: rgba(227,32,43,.18); line-height: 0.8; position: absolute; right: 24px; top: 50%; transform: translateY(-50%); pointer-events: none; }
+  .feat { display: grid; grid-template-columns: 280px 1fr; overflow: hidden; }
+  .feat-body { padding: 28px 32px; display: flex; flex-direction: column; gap: 8px; }
+  .feat h2 { font-size: 48px; }
+  .rec { font-size: 40px; color: var(--red-2); }
+  @media (max-width: 720px) { .feat { grid-template-columns: 1fr; } .hero-num { display: none; } }
+  .ev { padding: 20px; display: flex; flex-direction: column; gap: 8px; }
+  .ev:hover { border-color: var(--red); }
+  .small { font-size: 13px; }
+  .main { font-weight: 700; }
+</style>
