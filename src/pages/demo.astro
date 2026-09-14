@@ -7,21 +7,21 @@ const site = Astro.site?.toString().replace(/\/$/, '');
 <Base title="Antes y después" description="Qué ve WhatsApp, Instagram y Google cuando alguien comparte un link de la liga.">
   <div class="eyebrow">Demo para la reunión</div>
   <h1>Antes y después</h1>
-  <p class="muted" style="max-width:720px">Cuando un peleador comparte un link de la liga en WhatsApp o Instagram, la app pide al servidor una vista previa. Hoy el servidor responde con una página vacía: no hay nombre, no hay foto. Con el sitio nuevo cada peleador y cada evento tienen su propia tarjeta.</p>
+  <p class="muted" style="max-width:720px">Hoy el sitio de la liga tiene una sola página. No existe una página de peleador ni de evento: Zambrano no tiene un link suyo que mandar, y cualquier link de la liga muestra la misma vista previa, el logo. Google tampoco encuentra nada: ni peleadores, ni carteleras, ni resultados. Con el sitio nuevo cada peleador y cada evento tienen su propia página y su propia tarjeta.</p>
 
   <div class="grid grid-2" style="margin-top:28px">
     <div>
       <div class="eyebrow" style="color:var(--muted)">Hoy · riotfl.mx</div>
       <div class="wa">
         <div class="bubble">
-          <div class="prev empty"><div class="ph"></div><div><div class="t">riotfl.mx</div><div class="d">Legacy Fight League</div></div></div>
+          <div class="prev"><img src={u('/riotfl-og.png')} alt="Vista previa actual de riotfl.mx" style="background:#fff;padding:28px 40px;box-sizing:border-box" /><div class="t">Legacy Fight League | Liga de Artes Marciales Mixtas en México</div><div class="d">Legacy Fight League es la plataforma líder de MMA en México. Descubre eventos, peleadores, resultados y rankings...</div></div>
           <div class="link">https://www.riotfl.mx/</div>
         </div>
       </div>
       <ul class="muted pts">
-        <li>Sin foto, sin nombre del peleador, sin fecha del evento.</li>
-        <li>Google no indexa peleadores ni resultados: la página llega vacía.</li>
-        <li>Misma vista previa para todos los links del sitio.</li>
+        <li>Una sola página: no hay link de peleador ni de evento que compartir.</li>
+        <li>Misma vista previa para cualquier link de la liga: el logo, sin foto ni fecha.</li>
+        <li>Google no encuentra peleadores, carteleras ni resultados: la página llega vacía al buscador.</li>
       </ul>
     </div>
     <div>
