@@ -10,7 +10,7 @@ interface Props {
   ogImage?: string;      // ruta relativa, p.ej. /og/peleadores/roberto-zambrano.png
   ogType?: 'website' | 'profile' | 'article';
 }
-const { title, description, ogImage = '/og/default.png', ogType = 'website' } = Astro.props;
+const { title, description, ogImage = '/og/default.jpg', ogType = 'website' } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogAbs = new URL(u(ogImage), Astro.site);
 const fullTitle = title === 'Legacy Fight League' ? title : `${title} | Legacy Fight League`;

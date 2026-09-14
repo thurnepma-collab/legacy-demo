@@ -1,5 +1,6 @@
 import satori from 'satori';
 import { Resvg } from '@resvg/resvg-js';
+import sharp from 'sharp';
 import { readFile } from 'node:fs/promises';
 import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
@@ -27,7 +28,9 @@ export const h = (type: string, style: Record<string, any> = {}, children: any =
 export async function renderPng(tree: any) {
   const svg = await satori(tree, { width: 1200, height: 630, fonts: await fonts() });
   const png = new Resvg(svg, { fitTo: { mode: 'width', value: 1200 } }).render().asPng();
-  return new Response(png, { headers: { 'Content-Type': 'image/png', 'Cache-Control': 'public, max-age=86400' } });
+  // JPEG bajo 300 KB: WhatsApp no muestra imágenes OG más pesadas.
+  const jpg = await sharp(png).jpeg({ quality: 82, mozjpeg: true }).toBuffer();
+  return new Response(jpg, { headers: { 'Content-Type': 'image/jpeg', 'Cache-Control': 'public, max-age=86400' } });
 }
 
 export const BRAND = { bg: '#0b0b0d', bg2: '#141418', red: '#e3202b', red2: '#ff3b47', gold: '#e8c26a', muted: '#9a9aa6', text: '#f2f2f2' };

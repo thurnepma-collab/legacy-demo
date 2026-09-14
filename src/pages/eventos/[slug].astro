@@ -17,7 +17,7 @@ const grouped = sections
   .map((s) => ({ s, bouts: (e.card ?? []).filter((b) => b.section === s).sort((a, b) => b.order - a.order) }))
   .filter((g) => g.bouts.length);
 ---
-<Base title={isUp ? e.name : `${e.name} · Resultados`} description={desc} ogImage={`/og/eventos/${e.slug}.png`} ogType="article">
+<Base title={isUp ? e.name : `${e.name} · Resultados`} description={desc} ogImage={`/og/eventos/${e.slug}.jpg`} ogType="article">
   <div class:list={['head', 'card', { banner: !!e.banner }]} style={e.banner ? `--banner: url(${u(e.banner)})` : undefined}>
     <div>
       <div class="eyebrow">{isUp ? 'Próximo evento' : 'Resultados oficiales'}</div>
