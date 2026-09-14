@@ -35,10 +35,11 @@ export const BRAND = { bg: '#0b0b0d', bg2: '#141418', red: '#e3202b', red2: '#ff
 const LOGO = 'data:image/png;base64,' + readFileSync(join(process.cwd(), 'public', 'legacy-logo.png')).toString('base64');
 
 // Marco común: fondo, logo arriba a la izquierda, pie con dominio.
-export function frame(children: any[], footer = 'legacyfl.mx') {
+export function frame(children: any[], footer = 'legacyfl.mx', background: any[] | null = null) {
   return h('div', {
     width: 1200, height: 630, display: 'flex', flexDirection: 'column', background: BRAND.bg, color: BRAND.text, fontFamily: 'Inter', position: 'relative', overflow: 'hidden',
   }, [
+    ...(background ?? []),
     h('div', { position: 'absolute', left: -200, top: -260, width: 900, height: 900, borderRadius: 900, background: 'radial-gradient(circle, rgba(227,32,43,0.45) 0%, rgba(11,11,13,0) 62%)' }),
     h('div', { position: 'absolute', right: 0, top: 0, width: 14, height: 630, background: BRAND.red }),
     h('div', { display: 'flex', padding: '34px 56px 0' }, [
@@ -76,4 +77,16 @@ export async function photoNode(photo: string | undefined, w = 380, ht = 494) {
   return h('div', { display: 'flex', flexShrink: 0, width: w, height: ht, borderRadius: 14, overflow: 'hidden', border: `3px solid ${BRAND.red}` }, [
     h('img', { objectFit: 'cover', objectPosition: 'center top' }, undefined, { width: w, height: ht, src: `data:${mime};base64,${data.toString('base64')}` }),
   ]);
+}
+
+// Banner de evento (de /public) como fondo a sangre con degradado oscuro encima; null si no hay.
+export async function bannerBackground(banner: string | undefined) {
+  if (!banner) return null;
+  let data: Buffer;
+  try { data = await readFile(join(process.cwd(), 'public', banner)); } catch { return null; }
+  const mime = banner.endsWith('.png') ? 'image/png' : 'image/jpeg';
+  return [
+    h('img', { position: 'absolute', left: 0, top: 0, objectFit: 'cover' }, undefined, { width: 1200, height: 630, src: `data:${mime};base64,${data.toString('base64')}` }),
+    h('div', { position: 'absolute', left: 0, top: 0, width: 1200, height: 630, background: 'linear-gradient(90deg, rgba(11,11,13,0.94) 0%, rgba(11,11,13,0.80) 50%, rgba(11,11,13,0.35) 100%)' }),
+  ];
 }

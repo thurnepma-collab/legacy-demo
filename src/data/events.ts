@@ -19,8 +19,11 @@ export type Event = {
   date: string;      // ISO
   time?: string;
   venue: string;
+  address?: string;
   city: string;
   status: 'upcoming' | 'completed';
+  banner?: string;   // imagen del evento (demo: Ticketwolf)
+  price?: string;
   tickets?: string;
   stream?: string;
   summary?: string;
@@ -34,10 +37,13 @@ export const events: Event[] = [
     name: 'Legacy 19',
     number: 19,
     date: '2026-10-03',
-    time: '18:00',
-    venue: 'Universidad 2014',
+    time: '19:00',
+    venue: 'Foros Universidad',
+    address: 'Av. Universidad 2014, Copilco, Coyoacán',
     city: 'CDMX',
     status: 'upcoming',
+    banner: '/eventos/legacy-19.jpg',
+    price: 'General $800 MXN',
     tickets: 'https://ticketwolf.mx/e/legacy-19',
     stream: 'YouTube',
     summary: 'Primer evento bajo el nombre Legacy Fight League. Cartelera por confirmar.',

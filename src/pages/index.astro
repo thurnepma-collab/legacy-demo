@@ -9,17 +9,17 @@ const last = completed().slice(0, 3);
 const featured = fighters.find((f) => f.featured)!;
 ---
 <Base title="Legacy Fight League" description="Liga de artes marciales mixtas en la Ciudad de México. Eventos, peleadores, resultados y rankings.">
-  <section class="hero card">
+  <section class:list={['hero', 'card', { banner: !!next.banner }]} style={next.banner ? `--banner: url(${u(next.banner)})` : undefined}>
     <div class="hero-text">
       <div class="eyebrow">Próximo evento · {fmtDate(next.date, { weekday: 'long', day: 'numeric', month: 'long' })}</div>
       <h1>{next.name}</h1>
       <p class="muted">{next.venue}, {next.city} · {next.time} hrs · Estelar: {next.mainEvent}</p>
       <div class="cta">
-        <a class="btn" href={next.tickets} target="_blank" rel="noopener">Comprar boletos</a>
+        <a class="btn" href={next.tickets} target="_blank" rel="noopener">Comprar boletos{next.price ? ` · ${next.price}` : ''}</a>
         <a class="btn btn-ghost" href={u(`/eventos/${next.slug}`)}>Ver cartelera</a>
       </div>
     </div>
-    <div class="hero-num display">{next.number}</div>
+    {!next.banner && <div class="hero-num display">{next.number}</div>}
   </section>
 
   <section class="section">
@@ -53,6 +53,8 @@ const featured = fighters.find((f) => f.featured)!;
 
 <style>
   .hero { display: flex; justify-content: space-between; align-items: center; gap: 24px; padding: 48px 40px; background: linear-gradient(135deg, #1a0b0d 0%, var(--bg-2) 55%); overflow: hidden; position: relative; }
+  .hero.banner { background-image: linear-gradient(90deg, rgba(11,11,13,.94) 0%, rgba(11,11,13,.72) 50%, rgba(11,11,13,.2) 100%), var(--banner); background-size: cover; background-position: center; min-height: 420px; }
+  @media (max-width: 720px) { .hero.banner { background-image: linear-gradient(rgba(11,11,13,.88), rgba(11,11,13,.88)), var(--banner); min-height: 0; } }
   .hero-text { max-width: 620px; }
   .hero h1 { margin: 8px 0 12px; }
   .cta { display: flex; gap: 12px; margin-top: 22px; flex-wrap: wrap; }

@@ -18,15 +18,16 @@ const grouped = sections
   .filter((g) => g.bouts.length);
 ---
 <Base title={isUp ? e.name : `${e.name} · Resultados`} description={desc} ogImage={`/og/eventos/${e.slug}.png`} ogType="article">
-  <div class="head card">
+  <div class:list={['head', 'card', { banner: !!e.banner }]} style={e.banner ? `--banner: url(${u(e.banner)})` : undefined}>
     <div>
       <div class="eyebrow">{isUp ? 'Próximo evento' : 'Resultados oficiales'}</div>
       <h1>{e.name}</h1>
       <div class="muted meta">{fmtDate(e.date, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}{e.time ? ` · ${e.time} hrs` : ''} · {e.venue}, {e.city}{e.stream ? ` · ${e.stream}` : ''}</div>
+      {e.address && <div class="muted meta small">{e.address}</div>}
       {e.summary && <p class="sum">{e.summary}</p>}
-      {isUp && e.tickets && <a class="btn" href={e.tickets} target="_blank" rel="noopener">Comprar boletos</a>}
+      {isUp && e.tickets && <a class="btn" href={e.tickets} target="_blank" rel="noopener">Comprar boletos{e.price ? ` · ${e.price}` : ''}</a>}
     </div>
-    <div class="display bignum">{e.number}</div>
+    {!e.banner && <div class="display bignum">{e.number}</div>}
   </div>
 
   {e.card ? (
@@ -66,6 +67,8 @@ const grouped = sections
 
 <style>
   .head { display: flex; justify-content: space-between; align-items: center; gap: 24px; padding: 40px; position: relative; overflow: hidden; background: linear-gradient(135deg, #1a0b0d 0%, var(--bg-2) 55%); }
+  .head.banner { background-image: linear-gradient(90deg, rgba(11,11,13,.94) 0%, rgba(11,11,13,.75) 50%, rgba(11,11,13,.25) 100%), var(--banner); background-size: cover; background-position: center; min-height: 360px; }
+  @media (max-width: 720px) { .head.banner { background-image: linear-gradient(rgba(11,11,13,.88), rgba(11,11,13,.88)), var(--banner); min-height: 0; } }
   .head h1 { margin: 6px 0 10px; }
   .meta { font-size: 15px; }
   .sum { max-width: 640px; color: #d5d5dc; }

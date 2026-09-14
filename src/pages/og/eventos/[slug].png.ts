@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 import { events, fmtDate } from '../../../data/events';
-import { renderPng, frame, h, BRAND } from '../../../lib/og';
+import { renderPng, frame, h, bannerBackground, BRAND } from '../../../lib/og';
 
 export function getStaticPaths() {
   return events.map((e) => ({ params: { slug: e.slug }, props: { e } }));
@@ -21,9 +21,11 @@ export const GET: APIRoute = async ({ props }) => {
         h('div', { fontFamily: 'Bebas Neue', fontSize: 46, color: BRAND.text }, e.mainEvent.toUpperCase()),
       ]),
     ]),
-    h('div', { display: 'flex', alignItems: 'center', justifyContent: 'center', width: 300 }, [
-      h('div', { fontFamily: 'Bebas Neue', fontSize: 420, color: 'rgba(227,32,43,0.22)', lineHeight: 0.8 }, String(e.number)),
-    ]),
-  ]);
+    e.banner
+      ? h('div', { display: 'flex', width: 300 })
+      : h('div', { display: 'flex', alignItems: 'center', justifyContent: 'center', width: 300 }, [
+          h('div', { fontFamily: 'Bebas Neue', fontSize: 420, color: 'rgba(227,32,43,0.22)', lineHeight: 0.8 }, String(e.number)),
+        ]),
+  ], 'legacyfl.mx', await bannerBackground(e.banner));
   return renderPng(tree);
 };
