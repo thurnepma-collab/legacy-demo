@@ -51,12 +51,25 @@ const path = Astro.url.pathname;
   </head>
   <body>
     <header class="top">
-      <a class="brand" href={u('/')}><span class="brand-mark">LEGACY</span><span class="brand-sub">Fight League</span></a>
-      <nav>
-        {nav.map((n) => <a href={n.href} class:list={{ active: path.startsWith(n.href) }}>{n.label}</a>)}
+      <a class="brand" href={u('/')}><img src={u('/legacy-logo.png')} alt="Legacy Fight League" width="1080" height="298" /></a>
+      <div class="top-right">
         <a class="btn btn-sm" href="https://ticketwolf.mx/e/legacy-19" target="_blank" rel="noopener">Boletos</a>
+        <button class="burger" id="burger" type="button" aria-label="Abrir menú" aria-controls="nav" aria-expanded="false"><span></span><span></span><span></span></button>
+      </div>
+      <nav id="nav">
+        {nav.map((n) => <a href={n.href} class:list={{ active: path.startsWith(n.href) }}>{n.label}</a>)}
       </nav>
     </header>
+    <script>
+      const b = document.getElementById('burger');
+      const nav = document.getElementById('nav');
+      b?.addEventListener('click', () => {
+        const open = document.body.classList.toggle('nav-open');
+        b.setAttribute('aria-expanded', String(open));
+        b.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+      });
+      nav?.addEventListener('click', (e) => { if ((e.target as HTMLElement).tagName === 'A') document.body.classList.remove('nav-open'); });
+    </script>
     <main><slot /></main>
     <footer>
       <div>
@@ -119,15 +132,27 @@ const path = Astro.url.pathname;
   .section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 18px; border-bottom: 1px solid var(--line); padding-bottom: 10px; }
   .section-head a { font-size: 13px; color: var(--muted); font-weight: 700; }
 
-  header.top { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid var(--line); background: rgba(11,11,13,.85); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 10; }
-  .brand { display: flex; align-items: baseline; gap: 8px; }
-  .brand-mark { font-family: var(--display); font-size: 30px; color: var(--red-2); letter-spacing: 0.06em; line-height: 1; }
-  .brand-sub { font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
-  header nav { display: flex; align-items: center; gap: 18px; }
-  header nav a { font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  header.top { display: flex; align-items: center; gap: 24px; padding: 12px 20px; border-bottom: 1px solid var(--line); background: rgba(11,11,13,.85); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 10; }
+  .brand { display: flex; align-items: center; flex-shrink: 0; }
+  .brand img { height: 34px; width: auto; display: block; }
+  header nav { display: flex; align-items: center; gap: 22px; flex: 1; justify-content: flex-end; }
+  header nav a { font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding: 6px 0; }
   header nav a.active, header nav a:hover { color: var(--text); }
-  header nav a.btn { color: #fff; }
-  @media (max-width: 720px) { header nav a:not(.btn) { display: none; } }
+  .top-right { display: flex; align-items: center; gap: 10px; order: 3; }
+  .burger { display: none; width: 44px; height: 44px; border: 1px solid var(--line); border-radius: 6px; background: transparent; cursor: pointer; padding: 0; flex-direction: column; align-items: center; justify-content: center; gap: 5px; }
+  .burger span { display: block; width: 20px; height: 2px; background: var(--text); transition: transform .2s, opacity .2s; }
+  @media (max-width: 760px) {
+    header.top { flex-wrap: wrap; gap: 12px; justify-content: space-between; }
+    .brand img { height: 28px; }
+    .burger { display: flex; }
+    header nav { display: none; order: 4; flex-basis: 100%; flex-direction: column; align-items: stretch; gap: 0; padding-top: 8px; border-top: 1px solid var(--line); }
+    header nav a { font-size: 16px; padding: 14px 4px; border-bottom: 1px solid var(--line); }
+    header nav a:last-child { border-bottom: 0; }
+    body.nav-open header nav { display: flex; }
+    body.nav-open .burger span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    body.nav-open .burger span:nth-child(2) { opacity: 0; }
+    body.nav-open .burger span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  }
 
   footer { border-top: 1px solid var(--line); padding: 28px 20px; font-size: 13px; color: var(--muted); display: grid; gap: 10px; }
   footer .social { display: flex; gap: 16px; flex-wrap: wrap; }

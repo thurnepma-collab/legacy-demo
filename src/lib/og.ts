@@ -1,6 +1,7 @@
 import satori from 'satori';
 import { Resvg } from '@resvg/resvg-js';
 import { readFile } from 'node:fs/promises';
+import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { join } from 'node:path';
 
@@ -31,16 +32,17 @@ export async function renderPng(tree: any) {
 
 export const BRAND = { bg: '#0b0b0d', bg2: '#141418', red: '#e3202b', red2: '#ff3b47', gold: '#e8c26a', muted: '#9a9aa6', text: '#f2f2f2' };
 
-// Marco común: fondo, marca arriba a la izquierda, pie con dominio.
+const LOGO = 'data:image/png;base64,' + readFileSync(join(process.cwd(), 'public', 'legacy-logo.png')).toString('base64');
+
+// Marco común: fondo, logo arriba a la izquierda, pie con dominio.
 export function frame(children: any[], footer = 'legacyfl.mx') {
   return h('div', {
     width: 1200, height: 630, display: 'flex', flexDirection: 'column', background: BRAND.bg, color: BRAND.text, fontFamily: 'Inter', position: 'relative', overflow: 'hidden',
   }, [
     h('div', { position: 'absolute', left: -200, top: -260, width: 900, height: 900, borderRadius: 900, background: 'radial-gradient(circle, rgba(227,32,43,0.45) 0%, rgba(11,11,13,0) 62%)' }),
     h('div', { position: 'absolute', right: 0, top: 0, width: 14, height: 630, background: BRAND.red }),
-    h('div', { display: 'flex', alignItems: 'baseline', gap: 12, padding: '36px 56px 0' }, [
-      h('div', { fontFamily: 'Bebas Neue', fontSize: 44, color: BRAND.red2, letterSpacing: 2 }, 'LEGACY'),
-      h('div', { fontSize: 16, letterSpacing: 5, color: BRAND.muted, fontWeight: 700 }, 'FIGHT LEAGUE'),
+    h('div', { display: 'flex', padding: '34px 56px 0' }, [
+      h('img', {}, undefined, { src: LOGO, width: 200, height: 55 }),
     ]),
     h('div', { display: 'flex', flex: 1, padding: '0 56px' }, children),
     h('div', { display: 'flex', justifyContent: 'space-between', padding: '0 56px 30px', fontSize: 18, color: BRAND.muted, letterSpacing: 2, fontWeight: 700 }, [
